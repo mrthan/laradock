@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM eclipse-temurin:17-jdk-jammy
 
 RUN apt-get update && apt-get install -y git curl && rm -rf /var/lib/apt/lists/*
 
@@ -25,8 +25,8 @@ VOLUME /var/jenkins_home
 # or config file with your custom jenkins Docker image.
 RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
 
-ENV TINI_VERSION 0.16.1
-ENV TINI_SHA d1cb5d71adc01d47e302ea439d70c79bd0864288
+ENV TINI_VERSION 0.19.0
+ENV TINI_SHA ffaeece323978760822de2cd2cf1b0913b667b13
 
 # Use tini as subreaper in Docker container to adopt zombie processes 
 RUN curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini && chmod +x /bin/tini \
@@ -36,11 +36,11 @@ COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groov
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.89.2}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.469}
 
 # jenkins.war checksum, download will be validated using it
-# 2.89.2
-ARG JENKINS_SHA=014f669f32bc6e925e926e260503670b32662f006799b133a031a70a794c8a14
+# 2.469
+ARG JENKINS_SHA=954b2759e2309151596e90bb5a88ddfd950d9397440403641bbefe5c3a2a016e
 
 
 # Can be used to customize where jenkins.war get downloaded from
@@ -73,7 +73,7 @@ RUN apt-get install -y curl && curl -sSL https://get.docker.com/ | sh
 RUN usermod -aG docker jenkins
 
 # Install Docker-Compose
-RUN curl -L "https://github.com/docker/compose/releases/download/1.16.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
 
